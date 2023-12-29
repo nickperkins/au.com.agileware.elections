@@ -6,11 +6,24 @@ class CRM_Elections_BAO_ElectionPosition extends CRM_Elections_DAO_ElectionPosit
   public static function findWithNominationsByElectionId($electionId) {
     $nominations = civicrm_api3('ElectionNomination', 'get', array(
       'election_position_id.election_id'  => $electionId,
-      'return' => ["member_nominee.display_name", "member_nominee.image_URL", "election_position_id", "comments", "is_eligible_candidate", "id", "has_rejected_nomination", "rejection_comments", "has_accepted_nomination", "member_nominee"],
+      'return' => ["member_nominee.display_name", "member_nominee.last_name", "member_nominee.image_URL", "election_position_id", "comments", "is_eligible_candidate", "id", "has_rejected_nomination", "rejection_comments", "has_accepted_nomination", "member_nominee"],
       'options' => ['limit' => 0],
     ));
 
-    $nominations = elections_shuffle_assoc($nominations['values']);
+    switch (Civi::settings()->get('elections_nominee_sort')) {
+      case 'Random':
+        $nominations = elections_shuffle_assoc($nominations['values']);
+        break;
+      case 'Alphabetical':
+        $nominations = elections_sort_assoc($nominations['values'], 'member_nominee.last_name');
+        break;
+      default:
+          throw new CRM_Core_Exception("Invalid value for 'elections_nominee_sort' setting.");
+          break;
+        break;
+    }
+
+
 
     $nominationIds = array_column($nominations, 'id');
 

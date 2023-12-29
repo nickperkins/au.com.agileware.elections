@@ -1,6 +1,7 @@
 <?php
 
 require_once 'elections.civix.php';
+
 use \Symfony\Component\DependencyInjection\ContainerBuilder;
 use CRM_Elections_ExtensionUtil as E;
 
@@ -626,6 +627,35 @@ function elections_shuffle_assoc($list) {
     $random[$key] = $list[$key];
   }
   return $random;
+}
+
+/**
+ * Sort the array by alphabetical order keeping the keys.
+ * @param $list
+ * @param $sortKey
+ * @return array
+ */
+
+function elections_sort_assoc($list, $sortKey) {
+  if (!is_array($list)) {
+    return $list;
+  }
+
+  $keys = array_keys($list);
+  usort($keys, function ($a, $b) use ($list, $sortKey) {
+    if ($list[$a][$sortKey] == $list[$b][$sortKey]) {
+      return 0;
+    }
+    if ($list[$a][$sortKey] < $list[$b][$sortKey]) {
+      return -1;
+    }
+    return 1;
+  });
+  $sorted = array();
+  foreach ($keys as $key) {
+    $sorted[$key] = $list[$key];
+  }
+  return $sorted;
 }
 
 /**
