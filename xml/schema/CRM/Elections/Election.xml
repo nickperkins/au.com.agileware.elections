@@ -277,4 +277,19 @@
     <onDelete>CASCADE</onDelete>
   </foreignKey>
 
+  <field>
+    <name>system</name>
+    <type>text</type>
+    <length>5</length>
+    <comment>System name of the election.</comment>
+    <add>5.3</add>
+    <html>
+      <type>Select</type>
+      <callback>CRM_Elections_BAO_Election::getVotingSystems</callback>
+    </html>
+    <import>true</import>
+    <export>true</export>
+    <required>true</required>
+  </field>
+
 </table>
