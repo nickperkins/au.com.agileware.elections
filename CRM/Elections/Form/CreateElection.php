@@ -45,6 +45,7 @@ class CRM_Elections_Form_CreateElection extends CRM_Elections_Form_Base {
 
       $defaults['name'] = $election->name;
       $defaults['description'] = $election->description;
+      $defaults['system'] = $election->system;
 
       $defaults['visibility_start_date'] = $election->visibility_start_date;
       $defaults['visibility_end_date'] = $election->visibility_end_date;
@@ -67,6 +68,7 @@ class CRM_Elections_Form_CreateElection extends CRM_Elections_Form_Base {
     }
     else {
       $this->eId = 0;
+      $defaults['system'] = 'FPTP';
       $defaults['anonymize_votes'] = 1;
       $defaults['allow_revote'] = 0;
       $defaults['required_nominations'] = 2;
@@ -83,6 +85,9 @@ class CRM_Elections_Form_CreateElection extends CRM_Elections_Form_Base {
     // election information fields
     $this->add('text', 'name', 'Name', array('size' => 35), TRUE);
     $this->add('textarea', 'description', 'Description', array('cols' => 55, 'rows' => 6), FALSE);
+    $this->add('select', 'system', 'Voting System', CRM_Elections_BAO_Election::getVotingSystems(), TRUE, array(
+      'placeholder' => '- Select -',
+    ));
 
     // Visibility fields.
     $this->add('datepicker', 'visibility_start_date', 'Start Date', array(), TRUE);

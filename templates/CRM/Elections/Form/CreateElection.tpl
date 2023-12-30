@@ -18,6 +18,11 @@
             <td>{$form.description.html}</td>
         </tr>
 
+        <tr class="crm-create-election-form-block-system">
+            <td class="label">{$form.system.label}</td>
+            <td>{$form.system.html}</td>
+        </tr>
+
         <tr>
             <td colspan="2">
                 <h2>{ts}Visibility{/ts}</h2>

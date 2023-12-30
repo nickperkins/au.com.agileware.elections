@@ -1,4 +1,5 @@
 <?php
+
 use CRM_Elections_ExtensionUtil as E;
 
 class CRM_Elections_BAO_Election extends CRM_Elections_DAO_Election {
@@ -18,6 +19,22 @@ class CRM_Elections_BAO_Election extends CRM_Elections_DAO_Election {
       'results_no_nominations' => self::$RESULTS_NO_NOMINATIONS,
     );
   }
+
+  /**
+   * Retrieves the available voting systems.
+   *
+   * This function returns an array of the available voting systems.
+   * Each key in the array is the system's identifier, and the corresponding value is the system's name.
+   *
+   * @return array An array of the available voting systems.
+   */
+  public static function getVotingSystems() {
+    return array(
+      'FPTP' => 'First Past the Post',
+      'IRV' => 'Instant Runoff',
+    );
+  }
+
 
   /**
    * Check if user is allowed to edit an election.
@@ -117,16 +134,14 @@ class CRM_Elections_BAO_Election extends CRM_Elections_DAO_Election {
 
     if (CRM_Elections_Helper_Dates::compare($values['nomination_start_date'], $values['nomination_end_date'], $dateFormat) != 1) {
       $errors['nomination_end_date'] = 'End date must be after start date.';
-    }
-    elseif (CRM_Elections_Helper_Dates::compare($values['visibility_end_date'], $values['nomination_end_date'], $dateFormat) == 1) {
+    } elseif (CRM_Elections_Helper_Dates::compare($values['visibility_end_date'], $values['nomination_end_date'], $dateFormat) == 1) {
       $errors['nomination_end_date'] = 'End date must be before visibility end date.';
     }
 
     // Check advertise candidates
     if (CRM_Elections_Helper_Dates::compare($values['nomination_end_date'], $values['advertise_candidates_date'], $dateFormat) != 1) {
       $errors['advertise_candidates_date'] = 'Start Date must be after nomination end date.';
-    }
-    elseif (CRM_Elections_Helper_Dates::compare($values['visibility_end_date'], $values['advertise_candidates_date'], $dateFormat) == 1) {
+    } elseif (CRM_Elections_Helper_Dates::compare($values['visibility_end_date'], $values['advertise_candidates_date'], $dateFormat) == 1) {
       $errors['advertise_candidates_date'] = 'Start Date must be before visibility end date.';
     }
 
@@ -138,20 +153,17 @@ class CRM_Elections_BAO_Election extends CRM_Elections_DAO_Election {
     // Check voting end date
     if (CRM_Elections_Helper_Dates::compare($values['voting_start_date'], $values['voting_end_date'], $dateFormat) != 1) {
       $errors['voting_end_date'] = 'End date must be after start date.';
-    }
-    elseif (CRM_Elections_Helper_Dates::compare($values['visibility_end_date'], $values['voting_end_date'], $dateFormat) == 1) {
+    } elseif (CRM_Elections_Helper_Dates::compare($values['visibility_end_date'], $values['voting_end_date'], $dateFormat) == 1) {
       $errors['voting_end_date'] = 'End date must be before visibility end date.';
     }
 
     // Check results date
     if (CRM_Elections_Helper_Dates::compare($values['voting_end_date'], $values['result_date'], $dateFormat) != 1) {
       $errors['result_date'] = 'Start Date must be after voting end date.';
-    }
-    elseif (CRM_Elections_Helper_Dates::compare($values['visibility_end_date'], $values['result_date'], $dateFormat) == 1) {
+    } elseif (CRM_Elections_Helper_Dates::compare($values['visibility_end_date'], $values['result_date'], $dateFormat) == 1) {
       $errors['result_date'] = 'Start Date must be before visibility end date.';
     }
 
     return $errors;
   }
-
 }
